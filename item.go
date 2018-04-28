@@ -27,7 +27,7 @@ func ItemRoutes(r *mux.Router) {
 	r.HandleFunc("/api/items", GetItems).Methods("GET")
 	r.HandleFunc("/api/items/checked", GetCheckedItems).Methods("GET")
 	r.HandleFunc("/api/items/unchecked", GetUncheckedItems).Methods("GET")
-	r.HandleFunc("/api/user/{id}/items", GetItemsByUserID).Methods("GET")
+	r.HandleFunc("/api/users/{id}/items", GetItemsByUserID).Methods("GET")
 	r.HandleFunc("/api/items/{id}", GetItem).Methods("GET")
 	r.HandleFunc("/api/items", CreateItem).Methods("POST")
 	r.HandleFunc("/api/items/{id}", UpdateItem).Methods("PUT")
