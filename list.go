@@ -1,49 +1,47 @@
 package main
 
-/*
+import (
+	"encoding/json"
+	"net/http"
 
- === NOT USED ===
+	"github.com/gorilla/mux"
+)
 
-// List struct
 type List struct {
-	gorm.Model
-	Name  string
-	Items []Item
+	List   string
+	ListID string
 }
 
 // ListRoutes returns all routes for lists
 func ListRoutes(r *mux.Router) {
-	r.HandleFunc("/api/lists", GetLists).Methods("GET")
-	r.HandleFunc("/api/lists/{id}", GetList).Methods("GET")
+	r.HandleFunc("/api/lists", GetAllLists).Methods("GET")
+	r.HandleFunc("/api/lists/{id}", GetListByID).Methods("GET")
 }
 
-// ListMigration creates the list table or reads from it if it exists
-func ListMigration() {
-	db.AutoMigrate(&List{})
-}
-
-func CreateListRelations() {
-	var list List
-	var item Item
-	db.Model(&list).Related(&item)
-}
-
-// GetLists returns all lists
-func GetLists(w http.ResponseWriter, r *http.Request) {
+// GetAllLists returns list names and ids
+func GetAllLists(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
 	var lists []List
-	db.Find(&lists)
+	var items []Item
+
+	db.Find(&items)
+
+	for _, item := range items {
+		lists = append(lists, List{List: item.List, ListID: item.ListID})
+	}
 	json.NewEncoder(w).Encode(lists)
 }
 
-// GetList returns a specific list
-func GetList(w http.ResponseWriter, r *http.Request) {
+// GetListByID returns all lists in an array
+func GetListByID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	var items []Item
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	var list List
-	db.Where("ID = ?", id).Find(&list)
-	json.NewEncoder(w).Encode(list)
+	db.Where("list_id = ?", id).Find(&items)
+	json.NewEncoder(w).Encode(items)
 }
-*/

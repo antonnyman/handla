@@ -17,6 +17,7 @@ type Item struct {
 	Count      int
 	Store      string
 	List       string
+	ListID     string
 	Checked    bool
 	AssignedTo int
 	UserID     int
@@ -46,7 +47,7 @@ func GetItems(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var items []Item
-	db.Find(&items)
+	db.Order("created_at desc, checked").Find(&items)
 	json.NewEncoder(w).Encode(items)
 }
 
@@ -108,6 +109,7 @@ func CreateItem(w http.ResponseWriter, r *http.Request) {
 		Count:      item.Count,
 		Store:      item.Store,
 		List:       item.List,
+		ListID:     item.ListID,
 		Checked:    item.Checked,
 		AssignedTo: item.AssignedTo,
 		UserID:     item.UserID,

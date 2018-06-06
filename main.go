@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/rs/cors"
+
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -29,6 +31,14 @@ func main() {
 	r := mux.NewRouter()
 	UserRoutes(r)
 	ItemRoutes(r)
+	ListRoutes(r)
 
-	log.Fatal(http.ListenAndServe(":8000", r))
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:*", "https://*.now.sh"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"*"},
+	})
+
+	handler := c.Handler(r)
+	log.Fatal(http.ListenAndServe(":8000", handler))
 }
